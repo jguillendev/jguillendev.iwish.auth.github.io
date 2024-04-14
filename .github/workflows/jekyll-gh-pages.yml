@@ -54,6 +54,6 @@ jobs:
         with:
           name: production-files
           path: ./dist
-      - name: Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages 2
         id: deployment
         uses: actions/deploy-pages@v4
