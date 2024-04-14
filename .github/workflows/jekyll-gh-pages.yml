@@ -31,7 +31,7 @@ jobs:
       - name: Install Packages
         run: npm ci
       - name: Bundle
-        run: npm run build:gpages
+        run: npm run build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
