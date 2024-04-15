@@ -27,9 +27,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v2
         with:
           node-version: 20
           cache: 'npm'
@@ -38,15 +38,14 @@ jobs:
       - name: Build
         run: npm run build --if-present
       - name: Setup Pages
-        uses: actions/configure-pages@v4
+        uses: actions/configure-pages@v2
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v2
         id: artifact-upload-step
         with:
           name: github-pages
           path: './dist'
           retention-days: 10
-          overwrite: true
           if-no-files-found: error
       - name: Output artifact ID
         run:  echo 'Artifact ID is ${{ steps.artifact-upload-step.outputs.artifact-id }}'
