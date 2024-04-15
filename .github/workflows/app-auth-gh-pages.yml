@@ -58,10 +58,11 @@ jobs:
           cache: 'npm'
       - name: Install dependencies
         run: npm ci
-      - name: Remove symlinks
-        run: find ./node_modules -type l ! -path "./node_modules/.bin/*" -delete
       - name: Build
         run: npm run build --if-present
+      - name: "Exclude node modules"  
+        run: |
+          node_modules/**
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Upload artifact
@@ -73,7 +74,7 @@ jobs:
           retention-days: 10
           overwrite: true
           if-no-files-found: error
-          
+    
       - name: Output artifact ID
         run:  echo 'Artifact ID is ${{ steps.artifact-upload-step.outputs.artifact-id }}'
 
