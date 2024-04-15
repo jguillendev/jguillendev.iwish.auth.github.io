@@ -71,18 +71,18 @@ jobs:
         uses: actions/configure-pages@v4
       - name: Find and display symlinks
         run: find . -type l
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
+      - name: Fix permissions
+        run: |
+          chmod -c -R +rX "_site/" | while read line; do
+            echo "::warning title=Invalid file permissions automatically fixed::$line"
+          done
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         id: artifact-upload-step
         with:
           name: github-pages
           path: './dist'
           retention-days: 10
-          overwrite: true
-          if-no-files-found: error
-    
-      - name: Output artifact ID
-        run:  echo 'Artifact ID is ${{ steps.artifact-upload-step.outputs.artifact-id }}'
 
   # Deploy job
   deploy:
