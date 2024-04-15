@@ -59,7 +59,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Remove symlinks
-        run: find ./node_modules -type l -delete
+        run: find ./node_modules -type l ! -path "./node_modules/.bin/*" -delete
       - name: Build
         run: npm run build --if-present
       - name: Setup Pages
