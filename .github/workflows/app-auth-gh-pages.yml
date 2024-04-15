@@ -39,6 +39,8 @@ jobs:
         uses: donatj/symlink-check-action@v1
         with:
           directory: . # The directory to check for symlinks, optional, defaults to .
+      - name: Find and display hard links
+        run: find . -type f -links +1
       - name: Find and display symlinks
         run: find . -type l
 
