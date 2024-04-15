@@ -44,7 +44,7 @@ jobs:
         id: artifact-upload-step
         with:
           name: github-pages
-          path: ./dist
+          path: './dist'
           retention-days: 10
           overwrite: true
           if-no-files-found: error
@@ -73,6 +73,6 @@ jobs:
           name: github-pages
       - name: Display structure of downloaded files
         run: ls -R
-      - name: Deploy to GitHub Pages 4
+      - name: Deploy to GitHub Pages 5
         id: deployment
         uses: actions/deploy-pages@v4
