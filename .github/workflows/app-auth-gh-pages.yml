@@ -46,6 +46,7 @@ jobs:
           name: github-pages
           path: ./dist
           retention-days: 10
+          overwrite: true
           if-no-files-found: error
       - name: Output artifact ID
         run:  echo 'Artifact ID is ${{ steps.artifact-upload-step.outputs.artifact-id }}'
@@ -74,4 +75,4 @@ jobs:
         run: ls -R
       - name: Deploy to GitHub Pages 4
         id: deployment
-        uses: actions/deploy-pages@v2
+        uses: actions/deploy-pages@v4
