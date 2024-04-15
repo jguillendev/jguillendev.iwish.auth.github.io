@@ -9,12 +9,6 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
 # Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
 # However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
 concurrency:
@@ -24,7 +18,14 @@ concurrency:
 jobs:
   # Build job
   build:
+    name: Build
     runs-on: ubuntu-latest
+    # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+    permissions:
+      contents: write
+      pages: write
+      issues: read
+      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -58,8 +59,10 @@ jobs:
 
     # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
     permissions:
-      pages: write      # to deploy to Pages
-      id-token: write   # to verify the deployment originates from an appropriate source
+      contents: write
+      pages: write
+      issues: read
+      id-token: write
 
     # Deploy to the github-pages environment
     environment:
@@ -69,6 +72,12 @@ jobs:
     # Specify runner + deployment step
     runs-on: ubuntu-latest
     steps:
+      - name: Pre
+        run: |
+          gh issue --repo ${{ github.repository }} \
+            create --title "Issue title" --body "Issue body"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
@@ -81,4 +90,4 @@ jobs:
         uses: actions/deploy-pages@v4 # or specific "vX.X.X" version tag for this action
         with:
           artifact_name: github-pages
-          token:
+          token:  ${{ secrets.GITHUB_TOKEN }}
