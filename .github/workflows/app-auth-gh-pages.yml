@@ -110,8 +110,6 @@ jobs:
           path: github-pages
       - name: Display structure of downloaded files
         run: ls -R github-pages
-      - name: Find and display symlinks
-        run: find . -type l
       - name: Deploy to GitHub Pages 5
         id: deployment
         uses: actions/deploy-pages@v4 # or specific "vX.X.X" version tag for this action
