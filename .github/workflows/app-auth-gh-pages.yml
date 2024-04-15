@@ -36,11 +36,12 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Find and display symlinks
-        run: find . -type l
+        run: find -L . -type l -ls.
 
   # Build job
   build:
     name: Build
+    needs: check-symlinks
     runs-on: ubuntu-latest
     # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
     permissions:
