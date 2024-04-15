@@ -81,7 +81,7 @@ jobs:
         id: artifact-upload-step
         with:
           name: github-pages
-          path: './dist'
+          path: dist
           retention-days: 10
 
   # Deploy job
