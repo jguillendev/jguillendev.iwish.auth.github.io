@@ -27,9 +27,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Set up Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
@@ -38,9 +38,9 @@ jobs:
       - name: Build
         run: npm run build --if-present
       - name: Setup Pages
-        uses: actions/configure-pages@v2
+        uses: actions/configure-pages@v4
       - name: Upload artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         id: artifact-upload-step
         with:
           name: github-pages
@@ -53,6 +53,7 @@ jobs:
   # Deploy job
   deploy:
     # Add a dependency to the build job
+    name: Deploy
     needs: build
 
     # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
@@ -68,6 +69,12 @@ jobs:
     # Specify runner + deployment step
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy to GitHub Pages
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: github-pages
+      - name: Display structure of downloaded files
+        run: ls -R
+      - name: Deploy to GitHub Pages 5
         id: deployment
-        uses: actions/deploy-pages@v2 # or specific "vX.X.X" version tag for this action
+        uses: actions/deploy-pages@v4 # or specific "vX.X.X" version tag for this action
