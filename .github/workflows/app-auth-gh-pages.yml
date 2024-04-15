@@ -44,7 +44,7 @@ jobs:
         id: artifact-upload-step
         with:
           name: build-artifact
-          path: dist
+          path: ./dist
           retention-days: 10
           if-no-files-found: error
       - name: Output artifact ID
@@ -65,9 +65,8 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build-artifact
-          path: dist
       - name: Display structure of downloaded files
-        run: ls -R  dist
+        run: ls -R
       - name: Deploy to GitHub Pages 4
         id: deployment
         uses: actions/deploy-pages@v4
