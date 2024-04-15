@@ -1,0 +1,120 @@
+# Sample workflow for building and deploying a Jekyll site to GitHub Pages
+name: DOS - IWish - Federated - Auth App
+
+on:
+  # Runs on pushes targeting the default branch
+  push:
+    branches: ["dos"]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  check-symlinks:
+    name: Check Sym Links
+    runs-on: ubuntu-latest
+    # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+    permissions:
+      contents: write
+      pages: write
+      issues: read
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm install
+      - name: Test Project Symlinks
+        uses: donatj/symlink-check-action@v1
+        with:
+          directory: . # The directory to check for symlinks, optional, defaults to .
+      - name: Find and display hard links
+        run: find . -type f -links +1
+      - name: Find and display symlinks
+        run: find . -type l
+
+  # Build job
+  build:
+    name: Build
+    needs: check-symlinks
+    runs-on: ubuntu-latest
+    # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+    permissions:
+      contents: write
+      pages: write
+      issues: read
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: Build
+        run: npm run build --if-present
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+      - name: Find and display symlinks
+        run: find . -type l
+      - name: Fix permissions
+        run: |
+          chmod -c -R +rX "_site/" | while read line; do
+            echo "::warning title=Invalid file permissions automatically fixed::$line"
+          done
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        id: artifact-upload-step
+        with:
+          name: github-pages
+          path: dist
+          retention-days: 10
+
+  # Deploy job
+  deploy:
+    # Add a dependency to the build job
+    name: Deploy
+    needs: build
+
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      contents: write
+      pages: write
+      issues: read
+      id-token: write
+
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    # Specify runner + deployment step
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: github-pages
+          path: github-pages
+      - name: Display structure of downloaded files
+        run: ls -R github-pages
+      - name: Deploy to GitHub Pages 5
+        id: deployment
+        uses: actions/deploy-pages@v4 # or specific "vX.X.X" version tag for this action
+        with:
+          artifact_name: github-pages
+          token:  ${{ secrets.GITHUB_TOKEN }}
