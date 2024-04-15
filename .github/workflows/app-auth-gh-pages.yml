@@ -35,8 +35,12 @@ jobs:
           cache: 'npm'
       - name: Install dependencies
         run: npm install
+      - name: Test Project Symlinks
+        uses: donatj/symlink-check-action@v1
+        with:
+          directory: . # The directory to check for symlinks, optional, defaults to .
       - name: Find and display symlinks
-        run: find -L . -type l
+        run: find . -type l
 
   # Build job
   build:
