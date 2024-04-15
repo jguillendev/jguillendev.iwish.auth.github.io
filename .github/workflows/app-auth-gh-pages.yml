@@ -66,7 +66,7 @@ jobs:
         with:
           name: github-pages
       - name: Display structure of downloaded files
-        run: ls -R
+        run: ls -R ./dist
       - name: Deploy to GitHub Pages 4
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v2
